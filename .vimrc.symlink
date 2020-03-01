@@ -1,0 +1,371 @@
+set nocompatible              " be iMproved, required
+filetype off                  " required
+
+" --------------------------------
+" Plugins  (Need to be loaded first!)
+" --------------------------------
+
+" set the runtime path to include Vundle and initialize
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+
+" let Vundle manage Vundle, required
+Plugin 'VundleVim/Vundle.vim'
+
+" Plugins
+""""""""""""""""""""""""""""""""""
+
+" git integration via :G command
+Plugin 'tpope/vim-fugitive'
+
+Plugin 'tpope/vim-surround'
+
+" Allows easy comments (gc)
+Plugin 'tpope/vim-commentary'
+
+Plugin 'pangloss/vim-javascript'
+
+" Fuzzy file and buffer finder
+Plugin 'ctrlpvim/ctrlp.vim'
+
+" fancy status line
+Plugin 'vim-airline/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
+
+" coloring of matching ([{}])
+Plugin 'luochen1990/rainbow'
+
+" syntax highlighting in most languages
+Plugin 'sheerun/vim-polyglot'
+
+" File tree explorer
+Plugin 'preservim/nerdtree'
+Plugin 'Xuyuanp/nerdtree-git-plugin'
+
+" tmux integration
+Plugin 'benmills/vimux'
+
+" enable the . for plugins
+Plugin 'tpope/vim-repeat'
+
+" add end, endif, etc. automatically
+Plugin 'tpope/vim-endwise'
+
+" Startify: Fancy startup screen for vim
+Plugin 'mhinz/vim-startify'
+
+" gives the command :Bdelete that closes buffers but keeps the splits
+Plugin 'moll/vim-bbye'
+
+" for icons everywhere
+Plugin 'ryanoasis/vim-devicons'
+
+" THEMES """"""""""""""""""""
+" Atom-style dark theme
+Plugin 'joshdick/onedark.vim'
+Plugin 'rafi/awesome-vim-colorschemes'
+
+" All of your Plugins must be added before the following line
+call vundle#end()
+
+" --------------------------------
+" Pretty things
+" --------------------------------
+set syntax=on
+colorscheme afterglow
+let g:rainbow_active = 1    " 0 if you want to enable it later via :RainbowToggle
+set colorcolumn=80   " Colour at column 80
+
+" make comments and HTML attributes italic
+highlight Comment cterm=italic term=italic gui=italic
+highlight htmlArg cterm=italic term=italic gui=italic
+
+" --------------------------------
+" Italics
+" --------------------------------
+set t_ZH=[3m
+set t_ZR=[23m
+
+
+" --------------------------------
+" UI Config
+" --------------------------------
+set shortmess=a      " Disable the default Vim startup message.
+set cmdheight=2
+set spelllang=en_gb
+set laststatus=2    " Always show the status line at the bottom, even if you only have one window open.
+set mouse+=a        " Enable mouse support.
+filetype plugin on  " load filetype specific plugin files
+filetype indent on  " load filetype-specific indent files
+set autoindent
+set smartindent
+set number          " Line numbers
+set relativenumber  " Relative line numbers
+set showcmd         " Shows incomplete commands in the lower right of the screen
+set showmatch       " highlight matching ([{}])
+set splitbelow      " Open new splits to right and bottom 
+set splitright
+set scrolloff=5
+set wrap            " turn on line wrapping
+set wrapmargin=8
+set linebreak       " to prevent breaking in the word
+set showbreak=…     " show this at breaking lines
+set title           " set terminal title
+set signcolumn=yes  " always draw the column to the left of the number column
+
+" toggle invisible characters
+set list
+set listchars=tab:→\ ,eol:¬,trail:⋅,extends:❯,precedes:❮
+
+" switch cursor to line when in insert mode, and block when not
+set guicursor=n-v-c:block,i-ci-ve:ver25,r-cr:hor20,o:hor50
+\,a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor
+\,sm:block-blinkwait175-blinkoff150-blinkon175
+
+" --------------------------------
+" Buffers
+" --------------------------------
+set autoread        " Auto load files if they change on disc
+set hidden " Allows you to have buffers with unsaved changes in hidden windows. 
+
+" --------------------------------
+" Sensible Stuff
+" --------------------------------
+nmap Q <Nop>
+  " 'Q' in normal mode enters Ex mode. You almost never want this.
+set backspace=indent,eol,start " Makes that you can backspace over anything.
+set clipboard=unnamedplus      " Make vim use the system clipboard
+set encoding=utf-8
+set backupdir=~/.vim/tmp,~/.tmp,~/tmp,/tmp  " Set a list of dirs that vim places backups and swp file in
+set directory=~/.vim/tmp,~/.tmp,~/tmp,/tmp
+set viminfo+=n~/.vim/.viminfo
+
+" --------------------------------
+" Searching
+" --------------------------------
+set hlsearch        " Highlight whole word when searching
+set incsearch       " Display match while typing it
+set ignorecase      " Ignore case when searching...
+set smartcase       " ...except when serach query contains a capital letter
+set magic           " for regex in searches
+
+" --------------------------------
+" Leader Shortcuts
+" --------------------------------
+let g:mapleader=" " " Set leader to spacebar 
+map <silent> <Leader><Leader> :w<CR>
+
+" Disable highlight when <leader><cr> is pressed
+map <silent> <leader><CR> :noh<cr>
+
+nnoremap <Leader>sv :source $MYVIMRC<CR>
+nnoremap <Leader>s :mksession!<CR>
+
+nnoremap <Leader>- :vsp<CR>
+" nnoremap <Leader>| :sp<CR>  " for some weird reason this line caused vim to
+" bug out
+
+" edit .vimrc file
+map <Leader>ev :e! ~/.vimrc<CR>
+
+" toggle symbols for tab, linbreak,...
+nmap <Leader>l :set list!<CR>
+
+" toggle cursorline
+nnoremap <Leader>i :set cursorline!<CR>
+
+"easier quitting
+nnoremap <Leader>q :q<CR>
+nnoremap <Leader>x :Bdelete<CR>
+
+" easier buffer navigation
+nnoremap <Leader>bn :bn<CR>
+nnoremap <Leader>bp :bp<CR>
+
+" --------------------------------
+" General Keybindings
+" --------------------------------
+" Pasting - indent last pasted
+nnoremap gz '[=']    
+" Open current file in a new vertical split with '='
+nnoremap = :vsplit<cr>
+
+inoremap jj <ESC>:w<CR>
+
+" make Enter create a new line below the current one
+nnoremap <CR> A<CR><ESC>
+
+" Easy split navigation
+map <C-j> <C-w>j
+map <C-k> <C-W>k
+map <C-h> <C-W>h
+map <C-l> <C-W>l
+
+" Simplify using tabs
+nnoremap T :tabnew<cr>
+
+" Disable arrow keys in Normal mode
+map <up> <nop>
+map <down> <nop>
+map <left> <nop>
+map <right> <nop>
+
+" Some code needed to allow the terminal to recognise the Alt key!
+let c='a'
+while c <= 'z'
+  exec "set <A-".c.">=\e".c
+  exec "imap \e".c." <A-".c.">"
+  let c = nr2char(1+char2nr(c))
+endw
+set timeout ttimeoutlen=50
+
+" Move lines with Alt+ HJKL
+nnoremap <A-j> :m+1<CR>== 
+nnoremap <A-k> :m-2<CR>==
+inoremap <A-j> <Esc>:m .+1<CR>==gi
+inoremap <A-k> <Esc>:m .-2<CR>==gi
+vnoremap <A-j> :m '>+1<CR>gv=gv
+vnoremap <A-k> :m '<-2<CR>gv=gv
+
+" keep selection when indenting in visual mode
+vmap < <gv
+vmap > >gv
+
+" switch between current and last buffer
+nmap <Leader>. <C-^>
+
+" moving up and down by visual line (factoring in linebreaks)
+nnoremap <silent> j gj
+nnoremap <silent> k gk
+nnoremap <silent> ^ g^
+nnoremap <silent> $ g$
+
+
+" --------------------------------
+" Undo
+" --------------------------------
+set undofile " Maintain undo history between sessions
+set undodir=~/.vim/undodir
+
+" --------------------------------
+" Tab completion
+" --------------------------------
+set wildmenu
+set wildmode=list:longest,list:full
+function! InsertTabWrapper()
+  let col = col('.') - 1
+  if !col || getline('.')[col - 1] !~ '\k'
+    return "\<tab>"
+  else
+    return "\<c-p>"
+  endif
+    endfunction
+inoremap <Tab> <c-r>=InsertTabWrapper()<cr>
+inoremap <S-Tab> <c-n>
+
+" --------------------------------
+" Tabs
+" --------------------------------
+set tabstop=4
+set softtabstop=4
+set shiftwidth=4
+set expandtab
+
+" --------------------------------
+" Folding
+" --------------------------------
+set foldenable            " enable folding
+set foldlevelstart=10     " open most folds by default
+set foldnestmax=10        " 10 nested folds max
+set foldmethod=indent     " fold based on indent level
+
+
+" --------------------------------
+" Plugin specific settings
+" --------------------------------
+" Airline
+""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:airline_theme='luna' " Set Airline bar theme , options: luna, deus
+let g:airline#extensions#tabline#enabled = 1 " Enable the list of buffers
+let g:airline#extensions#tabline#fnamemod = ':t' "Show just the filename
+let g:airline_powerline_fonts=1
+let g:airline_solarized_bg='dark'
+
+" NERDTree
+"""""""""""""""""""""""""""""""""""""""""""""""""
+" Toggle NERDTree
+function! ToggleNerdTree()
+    if @% != "" && @% !~ "Startify" && (!exists("g:NERDTree") || (g:NERDTree.ExistsForTab() && !g:NERDTree.IsOpen()))
+        :NERDTreeFind
+    else
+        :NERDTreeToggle
+    endif
+endfunction
+
+map <F7> :call ToggleNerdTree()<CR>
+nnoremap <Leader>nt :call ToggleNerdTree()<CR>
+nnoremap <Leader>nf :NERDTreeFind<CR>
+" show hidden files by default
+let NERDTreeShowHidden=1
+" Close Vim if only window left is NERDTree
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree())
+
+let NERDTreeDirArrowExpandable = "\u00a0" " make arrows invisible
+let NERDTreeDirArrowCollapsible = "\u00a0" " make arrows invisible
+
+"CtrlP
+"""""""""""""""""""""""""""""""""""""""""""""""""
+let g:ctrlp_working_path_mode = 0 " Open in dir with .git or current dir if not found
+let g:ctrlp_map = '<c-p>'             " Key binding
+
+" Tmux
+"""""""""""""""""""""""""""""""""""""""""""""""""
+" unbinding for tmux
+map <C-a> <Nop>
+map <C-x> <Nop>
+if exists('$TMUX')
+  let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
+  let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
+else
+  let &t_SI = "\<Esc>]50;CursorShape=1\x7"
+  let &t_EI = "\<Esc>]50;CursorShape=0\x7"
+endif
+
+" Startify
+"""""""""""""""""""""""""""""""""""""""""""""""""
+" Don't change to directory when selecting a file
+let g:startify_files_number = 5
+let g:startify_change_to_dir = 0
+let g:startify_custom_header = [ ]
+let g:startify_relative_path = 1
+let g:startify_use_env = 1
+
+" Custom startup list, only show MRU from current directory/project
+let g:startify_lists = [
+\  { 'type': 'dir',       'header': [ 'Files '. getcwd() ] },
+\  { 'type': 'sessions',  'header': [ 'Sessions' ]       },
+\  { 'type': 'bookmarks', 'header': [ 'Bookmarks' ]      },
+\  { 'type': 'commands',  'header': [ 'Commands' ]       },
+\ ]
+
+let g:startify_commands = [
+\   { 'up': [ 'Update Plugins', ':PluginUpdate' ] },
+\   { 'ls': [ 'List Plugins', ':PluginList' ] },
+\ ]
+
+let g:startify_bookmarks = [
+\ { 'v': '~/.vim/vimrc' },
+\ { 'g': '~/.gitconfig' },
+\ { 'z': '~/.zshrc' }
+\ ]
+
+autocmd User Startified setlocal cursorline
+nmap <Leader>st :Startify<CR>
+
+" Startify
+"""""""""""""""""""""""""""""""""""""""""""""""""
+let g:WebDevIconsUnicodeDecorateFolderNodes = 1
+let g:DevIconsEnableFoldersOpenClose = 1
+let g:DevIconsEnableFolderPatternMatching = 1
+let g:DevIconsEnableFolderExtensionPatternMatching = 1
+let g:webdevicons_conceal_nerdtree_brackets = 0
