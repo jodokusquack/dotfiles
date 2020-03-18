@@ -60,6 +60,9 @@ Plugin 'moll/vim-bbye'
 " for icons everywhere
 Plugin 'ryanoasis/vim-devicons'
 
+" for better session handling
+Plugin 'tpope/vim-obsession'
+
 " THEMES """"""""""""""""""""
 " Atom-style dark theme
 Plugin 'joshdick/onedark.vim'
@@ -81,10 +84,18 @@ highlight Comment cterm=italic term=italic gui=italic
 highlight htmlArg cterm=italic term=italic gui=italic
 
 " --------------------------------
-" Italics
+" Italics and other key-remaps
 " --------------------------------
 set t_ZH=[3m
 set t_ZR=[23m
+
+if &term =~ '^screen'
+    " tmux will send xterm-style keys when its xterm-key option is on
+    execute "set <xUp>=\e[1;*A"
+    execute "set <xDown>=\e[1;*B"
+    execute "set <xRight>=\e[1;*C"
+    execute "set <xLeft>=\e[1;*D"
+endif
 
 
 " --------------------------------
@@ -161,7 +172,7 @@ map <silent> <leader><CR> :noh<cr>
 nnoremap <Leader>sv :source $MYVIMRC<CR>
 nnoremap <Leader>s :mksession!<CR>
 
-nnoremap <Leader>- :vsp<CR>
+nnoremap <Leader>- :sp<CR>
 " nnoremap <Leader>| :sp<CR>  " for some weird reason this line caused vim to
 " bug out
 
@@ -186,7 +197,7 @@ nnoremap <Leader>bp :bp<CR>
 " General Keybindings
 " --------------------------------
 " Pasting - indent last pasted
-nnoremap gz '[=']    
+nnoremap gz '[=']
 " Open current file in a new vertical split with '='
 nnoremap = :vsplit<cr>
 
@@ -209,6 +220,24 @@ map <up> <nop>
 map <down> <nop>
 map <left> <nop>
 map <right> <nop>
+nmap <S-Left>  <nop>
+nmap <S-Right>  <nop>
+nmap <S-Left>  <nop>
+nmap <S-Left>  <nop>
+
+" Remap arrow keys to something useful
+" left / shift-left decreases width
+nmap <Left>    :5wincmd <<CR>
+nmap <S-Left>  :wincmd  <<CR>
+" right / shift-right increases width
+nmap <Right>   :5wincmd ><CR>
+nmap <S-Right> :wincmd  ><CR>
+" up / shift-up increases height
+nmap <Up>      :5wincmd +<CR>
+nmap <S-Up>    :wincmd  +<CR>
+" down / shift-down decreases height
+nmap <Down>    :5wincmd -<CR>
+nmap <S-Down>  :wincmd  -<CR>
 
 " Some code needed to allow the terminal to recognise the Alt key!
 let c='a'
@@ -239,6 +268,9 @@ nnoremap <silent> j gj
 nnoremap <silent> k gk
 nnoremap <silent> ^ g^
 nnoremap <silent> $ g$
+
+" Run ruby code with a shortcut but only in the current buffer
+autocmd FileType ruby nmap <buffer> <A-r> :!ruby %<CR>
 
 
 " --------------------------------
@@ -354,9 +386,10 @@ let g:startify_commands = [
 \ ]
 
 let g:startify_bookmarks = [
-\ { 'v': '~/.vim/vimrc' },
+\ { 'v': '~/.vimrc' },
 \ { 'g': '~/.gitconfig' },
-\ { 'z': '~/.zshrc' }
+\ { 'z': '~/.zshrc' }, 
+\ { 't': '~/.tmux.conf' },
 \ ]
 
 autocmd User Startified setlocal cursorline

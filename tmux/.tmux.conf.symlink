@@ -30,6 +30,11 @@ set -g renumber-windows on
 set -g default-terminal 'screen-256color'
 set -as terminal-overrides ',xterm*:Tc:sitm=\E[3m'
 
+# this option is to pass correct key
+# combinations like Shift-arrow to the
+# terminal
+set-window-option -g xterm-keys on
+
 # make escape-time (time that tmux checks if anything else is coming after escape) shorter
 set -sg escape-time 0
 
@@ -102,6 +107,9 @@ tmux-plugins/tmux-resurrect   \
 # set -g @plugin 'github_username/plugin_name'
 # set -g @plugin 'git@github.com/user/plugin'
 # set -g @plugin 'git@bitbucket.com/user/plugin'
+
+# allow restoring of vim sessions
+#set -g @resurrect-strategy-vim 'session'
 
 # Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)
 run-shell '$HOME/.tmux/plugins/tpm/tpm'
