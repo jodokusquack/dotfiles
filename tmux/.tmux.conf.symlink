@@ -8,11 +8,14 @@ unbind C-b
 set -g prefix C-a
 bind-key C-a send prefix # makes that C-a C-a sends C-a to the program in the pane
 
-# split panes using | and -
-bind | split-window -h
-bind - split-window -v
+# split panes using | and - and open them in the same directory as the current pane
+bind | split-window -h -c "#{pane_current_path}"
+bind - split-window -v -c "#{pane_current_path}"
 unbind '"'
 unbind %
+
+# also open new windows in the same working directory
+bind c new-window -c "#{pane_current_path}"
 
 # easy config file reload
 bind r source-file ~/.tmux.conf
@@ -71,17 +74,22 @@ set -g set-titles on
 set -g set-titles-string '#T - #W'
 
 # Copying settings
-# For binding 'y' to copy and exiting selection mode
+# v starts selection
+bind -T copy-mode-vi v send -X begin-selection
+# y to copy and exit selection mode
 bind -T copy-mode-vi y send-keys -X copy-pipe-and-cancel 'xclip -sel clip -i'
-
-# For binding 'Enter' to copy and stay in selection mode
-bind -T copy-mode-vi Enter send-keys -X copy-pipe 'xclip -sel clip -i' '\;' send -X clear-selection
 
 # focus events enabled for terminals that support them
 set -g focus-events on
 
 # super useful when using "grouped sessions" and multi-monitor setup
 setw -g aggressive-resize on
+
+# for entering copy mode easier on my german keyboard
+bind-key -n C-c copy-mode
+
+# for navigating the terminal in vim mode
+set-window-option mode-keys vi
 
 
 ######################
