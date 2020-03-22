@@ -1,0 +1,3 @@
+# this is the global config file for rspec. Options here get overridden
+# by options set in the projects .rspec file
+--format documentation
