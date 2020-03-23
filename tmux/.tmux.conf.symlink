@@ -15,10 +15,10 @@ unbind '"'
 unbind %
 
 # also open new windows in the same working directory
-bind c new-window -c "#{pane_current_path}"
+bind c new-window -c "$PWD"
 
 # easy config file reload
-bind r source-file ~/.tmux.conf
+bind r source-file ~/.tmux.conf \; display-message "tmux.conf reloaded"
 
 # Enabling mouse control
 set -g mouse on
@@ -89,7 +89,7 @@ setw -g aggressive-resize on
 bind-key -n C-c copy-mode
 
 # for navigating the terminal in vim mode
-set-window-option mode-keys vi
+setw -g mode-keys vi
 
 
 ######################
