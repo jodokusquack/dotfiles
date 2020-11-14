@@ -17,51 +17,45 @@ Plugin 'VundleVim/Vundle.vim'
 
 " git integration via :G command
 Plugin 'tpope/vim-fugitive'
-
+" for 'surrounding' obejects with "('[{ or <% ...
 Plugin 'tpope/vim-surround'
-
 " Allows easy comments (gc)
 Plugin 'tpope/vim-commentary'
-
-Plugin 'pangloss/vim-javascript'
-
+" Emmet
+Plugin 'mattn/emmet-vim'
 " Fuzzy file and buffer finder
 Plugin 'ctrlpvim/ctrlp.vim'
-
 " fancy status line
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
-
 " coloring of matching ([{}])
 Plugin 'luochen1990/rainbow'
-
 " syntax highlighting in most languages
 Plugin 'sheerun/vim-polyglot'
-
 " File tree explorer
 Plugin 'preservim/nerdtree'
-Plugin 'Xuyuanp/nerdtree-git-plugin'
-
+" Plugin 'Xuyuanp/nerdtree-git-plugin'
 " tmux integration
 Plugin 'benmills/vimux'
-
 " enable the . for plugins
 Plugin 'tpope/vim-repeat'
-
 " add end, endif, etc. automatically
 Plugin 'tpope/vim-endwise'
-
-" Startify: Fancy startup screen for vim
+" Fancy startup screen for vim
 Plugin 'mhinz/vim-startify'
-
 " gives the command :Bdelete that closes buffers but keeps the splits
 Plugin 'moll/vim-bbye'
-
 " for icons everywhere
 Plugin 'ryanoasis/vim-devicons'
-
 " for better session handling
 Plugin 'tpope/vim-obsession'
+" Rails plugin (depends on surround)
+Plugin 'tpope/vim-rails'
+" for more tag options
+Plugin 'tpope/vim-ragtag'
+
+" for Navigating seamlessly with tmux
+Plugin 'christoomey/vim-tmux-navigator'
 
 " THEMES """"""""""""""""""""
 " Atom-style dark theme
@@ -114,7 +108,7 @@ set number          " Line numbers
 set relativenumber  " Relative line numbers
 set showcmd         " Shows incomplete commands in the lower right of the screen
 set showmatch       " highlight matching ([{}])
-set splitbelow      " Open new splits to right and bottom 
+set splitbelow      " Open new splits to right and bottom
 set splitright
 set scrolloff=5
 set wrap            " turn on line wrapping
@@ -130,20 +124,20 @@ set listchars=tab:→\ ,eol:¬,trail:⋅,extends:❯,precedes:❮
 
 " switch cursor to line when in insert mode, and block when not
 set guicursor=n-v-c:block,i-ci-ve:ver25,r-cr:hor20,o:hor50
-\,a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor
-\,sm:block-blinkwait175-blinkoff150-blinkon175
+            \,a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor
+            \,sm:block-blinkwait175-blinkoff150-blinkon175
 
 " --------------------------------
 " Buffers
 " --------------------------------
 set autoread        " Auto load files if they change on disc
-set hidden " Allows you to have buffers with unsaved changes in hidden windows. 
+set hidden " Allows you to have buffers with unsaved changes in hidden windows.
 
 " --------------------------------
 " Sensible Stuff
 " --------------------------------
 nmap Q <Nop>
-  " 'Q' in normal mode enters Ex mode. You almost never want this.
+" 'Q' in normal mode enters Ex mode. You almost never want this.
 set backspace=indent,eol,start " Makes that you can backspace over anything.
 set clipboard=unnamedplus      " Make vim use the system clipboard
 set encoding=utf-8
@@ -163,27 +157,24 @@ set magic           " for regex in searches
 " --------------------------------
 " Leader Shortcuts
 " --------------------------------
-let g:mapleader=" " " Set leader to spacebar 
+let g:mapleader=" " " Set leader to spacebar
 map <silent> <Leader><Leader> :w<CR>
 
 " Disable highlight when <leader><cr> is pressed
 map <silent> <leader><CR> :noh<cr>
 
-nnoremap <Leader>sv :source $MYVIMRC<CR>
+nnoremap <Leader>sv :source $MYVIMRC<CR> <bar> :echo "Updated vimrc"<CR>
 nnoremap <Leader>s :mksession!<CR>
 
+" Open new splits
 nnoremap <Leader>- :sp<CR>
-" nnoremap <Leader>| :sp<CR>  " for some weird reason this line caused vim to
-" bug out
+nnoremap <Leader># :vsplit<CR>
 
 " edit .vimrc file
 map <Leader>ev :e! ~/.vimrc<CR>
 
 " toggle symbols for tab, linbreak,...
 nmap <Leader>l :set list!<CR>
-
-" toggle cursorline
-nnoremap <Leader>i :set cursorline!<CR>
 
 "easier quitting
 nnoremap <Leader>q :q<CR>
@@ -196,11 +187,6 @@ nnoremap <Leader>bp :bp<CR>
 " --------------------------------
 " General Keybindings
 " --------------------------------
-" Pasting - indent last pasted
-nnoremap gz '[=']
-" Open current file in a new vertical split with '='
-nnoremap = :vsplit<cr>
-
 inoremap jj <ESC>:w<CR>
 
 " make Enter create a new line below the current one
@@ -211,9 +197,6 @@ map <C-j> <C-w>j
 map <C-k> <C-W>k
 map <C-h> <C-W>h
 map <C-l> <C-W>l
-
-" Simplify using tabs
-nnoremap T :tabnew<cr>
 
 " Disable arrow keys in Normal mode
 map <up> <nop>
@@ -242,14 +225,14 @@ nmap <S-Down>  :wincmd  -<CR>
 " Some code needed to allow the terminal to recognise the Alt key!
 let c='a'
 while c <= 'z'
-  exec "set <A-".c.">=\e".c
-  exec "imap \e".c." <A-".c.">"
-  let c = nr2char(1+char2nr(c))
+    exec "set <A-".c.">=\e".c
+    exec "imap \e".c." <A-".c.">"
+    let c = nr2char(1+char2nr(c))
 endw
 set timeout ttimeoutlen=50
 
 " Move lines with Alt+ HJKL
-nnoremap <A-j> :m+1<CR>== 
+nnoremap <A-j> :m+1<CR>==
 nnoremap <A-k> :m-2<CR>==
 inoremap <A-j> <Esc>:m .+1<CR>==gi
 inoremap <A-k> <Esc>:m .-2<CR>==gi
@@ -271,7 +254,13 @@ nnoremap <silent> $ g$
 
 " Run ruby code with a shortcut but only in the current buffer
 autocmd FileType ruby nmap <buffer> <A-r> :!ruby %<CR>
+autocmd FileType ruby nmap <buffer> <A-t> :!rspec %<CR>
 
+" Autoindent the whole document
+nnoremap F gg=G''
+
+" close braces in css files
+autocmd FileType scss,css inoremap { {<CR>}<ESC>ko
 
 " --------------------------------
 " Undo
@@ -285,13 +274,13 @@ set undodir=~/.vim/undodir
 set wildmenu
 set wildmode=list:longest,list:full
 function! InsertTabWrapper()
-  let col = col('.') - 1
-  if !col || getline('.')[col - 1] !~ '\k'
-    return "\<tab>"
-  else
-    return "\<c-p>"
-  endif
-    endfunction
+    let col = col('.') - 1
+    if !col || getline('.')[col - 1] !~ '\k'
+        return "\<tab>"
+    else
+        return "\<c-p>"
+    endif
+endfunction
 inoremap <Tab> <c-r>=InsertTabWrapper()<cr>
 inoremap <S-Tab> <c-n>
 
@@ -340,13 +329,13 @@ nnoremap <Leader>nf :NERDTreeFind<CR>
 " show hidden files by default
 let NERDTreeShowHidden=1
 " Close Vim if only window left is NERDTree
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree())
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
-let NERDTreeDirArrowExpandable = "\u00a0" " make arrows invisible
-let NERDTreeDirArrowCollapsible = "\u00a0" " make arrows invisible
+" let NERDTreeDirArrowExpandable = "\u00a0" " make arrows invisible
+" let NERDTreeDirArrowCollapsible = "\u00a0" " make arrows invisible
 
 "CtrlP
-"""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""
 let g:ctrlp_working_path_mode = 0 " Open in dir with .git or current dir if not found
 let g:ctrlp_map = '<c-p>'             " Key binding
 
@@ -356,12 +345,15 @@ let g:ctrlp_map = '<c-p>'             " Key binding
 map <C-a> <Nop>
 map <C-x> <Nop>
 if exists('$TMUX')
-  let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
-  let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
+    let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
+    let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
 else
-  let &t_SI = "\<Esc>]50;CursorShape=1\x7"
-  let &t_EI = "\<Esc>]50;CursorShape=0\x7"
+    let &t_SI = "\<Esc>]50;CursorShape=1\x7"
+    let &t_EI = "\<Esc>]50;CursorShape=0\x7"
 endif
+
+" automatically resizes windows when opening tmux splits
+autocmd VimResized * :wincmd =
 
 " Startify
 """""""""""""""""""""""""""""""""""""""""""""""""
@@ -374,23 +366,23 @@ let g:startify_use_env = 1
 
 " Custom startup list, only show MRU from current directory/project
 let g:startify_lists = [
-\  { 'type': 'dir',       'header': [ 'Files '. getcwd() ] },
-\  { 'type': 'sessions',  'header': [ 'Sessions' ]       },
-\  { 'type': 'bookmarks', 'header': [ 'Bookmarks' ]      },
-\  { 'type': 'commands',  'header': [ 'Commands' ]       },
-\ ]
+            \  { 'type': 'dir',       'header': [ 'Files '. getcwd() ] },
+            \  { 'type': 'sessions',  'header': [ 'Sessions' ]       },
+            \  { 'type': 'bookmarks', 'header': [ 'Bookmarks' ]      },
+            \  { 'type': 'commands',  'header': [ 'Commands' ]       },
+            \ ]
 
 let g:startify_commands = [
-\   { 'up': [ 'Update Plugins', ':PluginUpdate' ] },
-\   { 'ls': [ 'List Plugins', ':PluginList' ] },
-\ ]
+            \   { 'up': [ 'Update Plugins', ':PluginUpdate' ] },
+            \   { 'ls': [ 'List Plugins', ':PluginList' ] },
+            \ ]
 
 let g:startify_bookmarks = [
-\ { 'v': '~/.vimrc' },
-\ { 'g': '~/.gitconfig' },
-\ { 'z': '~/.zshrc' }, 
-\ { 't': '~/.tmux.conf' },
-\ ]
+            \ { 'v': '~/.vimrc' },
+            \ { 'g': '~/.gitconfig' },
+            \ { 'z': '~/.zshrc' },
+            \ { 't': '~/.tmux.conf' },
+            \ ]
 
 autocmd User Startified setlocal cursorline
 nmap <Leader>st :Startify<CR>
@@ -402,3 +394,20 @@ let g:DevIconsEnableFoldersOpenClose = 1
 let g:DevIconsEnableFolderPatternMatching = 1
 let g:DevIconsEnableFolderExtensionPatternMatching = 1
 let g:webdevicons_conceal_nerdtree_brackets = 0
+
+" Emmet
+"""""""""""""""""""""""""""""""""""""""""""""""""
+" for making all the childless tags to open with newlines
+" let g:user_emmet_settings = {
+"             \ 'html' : {
+"             \     'block_all_childless' : 1,
+"             \   }
+"             \ }
+
+" Ale
+"""""""""""""""""""""""""""""""""""""""""""""""""
+let g:ale_fixers = {
+            \'*': ['remove_trainling_lines', 'trim_whitespace'],
+            \'ruby': ['rubocop'],
+            \}
+let g:ale_fix_on_save = 1

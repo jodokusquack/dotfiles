@@ -9,16 +9,16 @@ set -g prefix C-a
 bind-key C-a send prefix # makes that C-a C-a sends C-a to the program in the pane
 
 # split panes using | and - and open them in the same directory as the current pane
-bind | split-window -h -c "#{pane_current_path}"
-bind - split-window -v -c "#{pane_current_path}"
 unbind '"'
 unbind %
+bind | split-window -h -c "#{pane_current_path}"
+bind - split-window -v -c "#{pane_current_path}"
 
 # also open new windows in the same working directory
-bind c new-window -c "$PWD"
+bind c new-window -c "#{pane_current_path}"
 
 # easy config file reload
-bind r source-file ~/.tmux.conf \; display-message "tmux.conf reloaded"
+bind r source-file ~/.tmux.conf \; display-message "~/.tmux.conf reloaded"
 
 # Enabling mouse control
 set -g mouse on
@@ -41,25 +41,40 @@ set-window-option -g xterm-keys on
 # make escape-time (time that tmux checks if anything else is coming after escape) shorter
 set -sg escape-time 0
 
-# switch bewteen panes using Alt-arrow without prefix
-bind -n C-M-h select-pane -L
-bind -n C-M-l select-pane -R
-bind -n C-M-k select-pane -U
-bind -n C-M-j select-pane -D
+# Smart pane switching with awareness of Vim splits.
+# See: https://github.com/christoomey/vim-tmux-navigator
+is_vim="ps -o state= -o comm= -t '#{pane_tty}' \
+    | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(view|n?vim?x?)(diff)?$'"
+bind-key -n 'C-h' if-shell "$is_vim" 'send-keys C-h'  'select-pane -L'
+bind-key -n 'C-j' if-shell "$is_vim" 'send-keys C-j'  'select-pane -D'
+bind-key -n 'C-k' if-shell "$is_vim" 'send-keys C-k'  'select-pane -U'
+bind-key -n 'C-l' if-shell "$is_vim" 'send-keys C-l'  'select-pane -R'
+tmux_version='$(tmux -V | sed -En "s/^tmux ([0-9]+(.[0-9]+)?).*/\1/p")'
+if-shell -b '[ "$(echo "$tmux_version < 3.0" | bc)" = 1 ]' \
+    "bind-key -n 'C-\\' if-shell \"$is_vim\" 'send-keys C-\\'  'select-pane -l'"
+if-shell -b '[ "$(echo "$tmux_version >= 3.0" | bc)" = 1 ]' \
+    "bind-key -n 'C-\\' if-shell \"$is_vim\" 'send-keys C-\\\\'  'select-pane -l'"
 
-bind h select-pane -L
-bind l select-pane -R
-bind k select-pane -U
-bind j select-pane -D
+bind-key -T copy-mode-vi 'C-h' select-pane -L
+bind-key -T copy-mode-vi 'C-j' select-pane -D
+bind-key -T copy-mode-vi 'C-k' select-pane -U
+bind-key -T copy-mode-vi 'C-l' select-pane -R
+bind-key -T copy-mode-vi 'C-\' select-pane -l
 
-# window navigation
-bind -n M-L next-window
-bind -n M-H previous-window
-bind -n M-K split-window -h -c "#{pane_current_path}"
-bind -n M-J split-window -v -c "#{pane_current_path}"
+# resizing panes
+bind -n S-Left resize-pane -L 2
+bind -n S-Right resize-pane -R 2
+bind -n S-Down resize-pane -D 1
+bind -n S-Up resize-pane -U 1
+
+bind -n C-Left resize-pane -L 10
+bind -n C-Right resize-pane -R 10
+bind -n C-Down resize-pane -D 5
+bind -n C-Up resize-pane -U 5
+
 # easier and faster switching between next/prev window
-bind C-p previous-window
 bind C-n next-window
+bind C-p previous-window
 
 # bind "=" to tile all windows
 unbind =
@@ -69,24 +84,24 @@ bind = select-layout tiled
 set -g base-index 1
 setw -g pane-base-index 1
 
-# let tmux change the title of the whole terminal window
-set -g set-titles on
-set -g set-titles-string '#T - #W'
+# to switch between sessions easily with a tree-like view (space to open
+# the sessions further)
+bind-key C-j choose-tree
 
 # Copying settings
+# for entering copy mode easier on my german keyboard
+bind-key '#' copy-mode
 # v starts selection
 bind -T copy-mode-vi v send -X begin-selection
 # y to copy and exit selection mode
 bind -T copy-mode-vi y send-keys -X copy-pipe-and-cancel 'xclip -sel clip -i'
+
 
 # focus events enabled for terminals that support them
 set -g focus-events on
 
 # super useful when using "grouped sessions" and multi-monitor setup
 setw -g aggressive-resize on
-
-# for entering copy mode easier on my german keyboard
-bind-key -n C-c copy-mode
 
 # for navigating the terminal in vim mode
 setw -g mode-keys vi
@@ -102,14 +117,12 @@ source $TMUX/.tmux.theme
 ###    Plugins     ###
 ######################
 # WARNING the set options form tmux only interpolate $HOME, and a few other
-# variables!! So no other variables can be used. 
+# variables!! So no other variables can be used.
 
 # List of plugins
-set -g @tpm_plugins '          \
-tmux-plugins/tpm              \
-tmux-plugins/tmux-sensible    \
-tmux-plugins/tmux-resurrect   \
-'
+set -g @plugin 'tmux-plugins/tpm'
+set -g @plugin 'tmux-plugins/tmux-resurrect'
+set -g @plugin 'pwittchen/tmux-plugin-spotify'
 
 # Other examples:
 # set -g @plugin 'github_username/plugin_name'
