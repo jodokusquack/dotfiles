@@ -1,0 +1,53 @@
+# +-----+
+# | Zsh |
+# +-----+
+
+alias d='dirs -v'
+for index ({1..9}) alias "$index"="cd +${index}"; unset index
+
+# +----+
+# | ls |
+# +----+
+
+alias ls='ls --color=auto'
+alias ll='ls -lahF'
+alias la='ls -A'
+alias l='ls -CF'
+
+# +----+
+# | rm |
+# +----+
+
+alias rm='rm -i'
+
+# +------+
+# | grep |
+# +------+
+
+alias grep='grep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
+
+# +-----+
+# | git |
+# +-----+
+
+alias gs='git status'
+alias ga='git add'
+alias gp='git push'
+alias gpo='git push origin'
+alias gb='git branch '
+alias gc='git commit'
+alias gd='git diff'
+alias gco='git checkout '
+alias gl='git log'
+
+# +------+
+# | tmux |
+# +------+
+
+alias tmux="env TERM=screen-256color tmux"
+alias tmuxk='tmux kill-session -t'
+alias tmuxa='tmux attach -t'
+alias tmuxl='tmux list-sessions'
+
