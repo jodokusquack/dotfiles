@@ -1,4 +1,4 @@
-set nocompatible              " be iMproved, required
+set nocompatible              " be improved, required
 filetype off                  " required
 
 " --------------------------------
@@ -17,18 +17,20 @@ Plugin 'VundleVim/Vundle.vim'
 
 " git integration via :G command
 Plugin 'tpope/vim-fugitive'
-" for 'surrounding' obejects with "('[{ or <% ...
+" for 'surrounding' objects with "('[{ or <% ...
 Plugin 'tpope/vim-surround'
 " Allows easy comments (gc)
 Plugin 'tpope/vim-commentary'
 " Emmet
 Plugin 'mattn/emmet-vim'
+" For other html tag handling
+Plugin 'alvan/vim-closetag'
 " Fuzzy file and buffer finder
 Plugin 'ctrlpvim/ctrlp.vim'
 " fancy status line
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
-" coloring of matching ([{}])
+" colouring of matching ([{}])
 Plugin 'luochen1990/rainbow'
 " syntax highlighting in most languages
 Plugin 'sheerun/vim-polyglot'
@@ -66,10 +68,14 @@ Plugin 'rafi/awesome-vim-colorschemes'
 call vundle#end()
 
 " --------------------------------
-" Pretty things
+" Pretty things (Colorscheme)
 " --------------------------------
 set syntax=on
-colorscheme afterglow
+
+let g:oceanic_next_terminal_bold = 1
+let g:oceanic_next_terminal_italic = 1
+
+colorscheme OceanicNext
 let g:rainbow_active = 1    " 0 if you want to enable it later via :RainbowToggle
 set colorcolumn=80   " Colour at column 80
 
@@ -77,11 +83,21 @@ set colorcolumn=80   " Colour at column 80
 highlight Comment cterm=italic term=italic gui=italic
 highlight htmlArg cterm=italic term=italic gui=italic
 
+" Airline
+""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:airline_theme='oceanicnext' " Set Airline bar theme , options: luna, deus
+let g:airline#extensions#tabline#enabled = 1 " Enable the list of buffers
+let g:airline#extensions#tabline#fnamemod = ':t' "Show just the filename
+let g:airline_powerline_fonts=1
+let g:airline_solarized_bg='dark'
+
 " --------------------------------
 " Italics and other key-remaps
 " --------------------------------
 set t_ZH=[3m
 set t_ZR=[23m
+let &t_8f = "\<Esc>[38:2:%lu:%lu:%lum"
+let &t_8b = "\<Esc>[48:2:%lu:%lu:%lum"
 
 if &term =~ '^screen'
     " tmux will send xterm-style keys when its xterm-key option is on
@@ -97,7 +113,6 @@ endif
 " --------------------------------
 set shortmess=a      " Disable the default Vim startup message.
 set cmdheight=2
-set spelllang=en_gb
 set laststatus=2    " Always show the status line at the bottom, even if you only have one window open.
 set mouse+=a        " Enable mouse support.
 filetype plugin on  " load filetype specific plugin files
@@ -161,7 +176,7 @@ let g:mapleader=" " " Set leader to spacebar
 map <silent> <Leader><Leader> :w<CR>
 
 " Disable highlight when <leader><cr> is pressed
-map <silent> <leader><CR> :noh<cr>
+map <silent> <Leader><CR> :noh<CR>
 
 nnoremap <Leader>sv :source $MYVIMRC<CR> <bar> :echo "Updated vimrc"<CR>
 nnoremap <Leader>s :mksession!<CR>
@@ -222,14 +237,15 @@ nmap <S-Up>    :wincmd  +<CR>
 nmap <Down>    :5wincmd -<CR>
 nmap <S-Down>  :wincmd  -<CR>
 
-" Some code needed to allow the terminal to recognise the Alt key!
-let c='a'
-while c <= 'z'
-    exec "set <A-".c.">=\e".c
-    exec "imap \e".c." <A-".c.">"
-    let c = nr2char(1+char2nr(c))
-endw
-set timeout ttimeoutlen=50
+" Some code needed to allow the terminal to recognise the Alt key! (Gives an
+" error in neovim)
+" let c='a'
+" while c <= 'z'
+"     exec "set <A-".c.">=\e".c
+"     exec "imap \e".c." <A-".c.">"
+"     let c = nr2char(1+char2nr(c))
+" endw
+" set timeout ttimeoutlen=50
 
 " Move lines with Alt+ JK
 nnoremap <A-j> :m+1<CR>==
@@ -260,11 +276,14 @@ nnoremap <silent> $ g$
 autocmd FileType ruby nmap <buffer> <A-r> :!ruby %<CR>
 autocmd FileType ruby nmap <buffer> <A-t> :!rspec %<CR>
 
+" Remove trailing whitespace with F5
+nnoremap <silent> <F5> :let _s=@/ <Bar> :%s/\s\+$//e <Bar> :let @/=_s <Bar> :nohl <Bar> :unlet _s <CR>
+
 " Autoindent the whole document
 nnoremap <F8> gg=G''
 
-" close braces in css files
-autocmd FileType scss,css inoremap { {<CR>}<ESC>ko
+" close braces in CSS files
+autocmd FileType scss,css inoremap <buffer> { {<CR>}<ESC>ko
 
 " --------------------------------
 " Undo
@@ -308,13 +327,6 @@ set foldmethod=indent     " fold based on indent level
 " --------------------------------
 " Plugin specific settings
 " --------------------------------
-" Airline
-""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:airline_theme='luna' " Set Airline bar theme , options: luna, deus
-let g:airline#extensions#tabline#enabled = 1 " Enable the list of buffers
-let g:airline#extensions#tabline#fnamemod = ':t' "Show just the filename
-let g:airline_powerline_fonts=1
-let g:airline_solarized_bg='dark'
 
 " NERDTree
 """""""""""""""""""""""""""""""""""""""""""""""""
@@ -322,8 +334,10 @@ let g:airline_solarized_bg='dark'
 function! ToggleNerdTree()
     if @% != "" && @% !~ "Startify" && (!exists("g:NERDTree") || (g:NERDTree.ExistsForTab() && !g:NERDTree.IsOpen()))
         :NERDTreeFind
+        :echo "Called Find"
     else
         :NERDTreeToggle
+        :echo "Called Toggle"
     endif
 endfunction
 
@@ -383,8 +397,7 @@ let g:startify_commands = [
 
 let g:startify_bookmarks = [
             \ { 'v': '~/.vimrc' },
-            \ { 'g': '~/.gitconfig' },
-            \ { 'z': '~/.zshrc' },
+            \ { 'z': '~/.dotfiles/zsh/.zshrc' },
             \ { 't': '~/.tmux.conf' },
             \ ]
 
@@ -401,12 +414,8 @@ let g:webdevicons_conceal_nerdtree_brackets = 0
 
 " Emmet
 """""""""""""""""""""""""""""""""""""""""""""""""
-" for making all the childless tags to open with newlines
-" let g:user_emmet_settings = {
-"             \ 'html' : {
-"             \     'block_all_childless' : 1,
-"             \   }
-"             \ }
+imap <C-y>; <plug>(emmet-expand-abbr)<CR><C-o>k<C-o>o
+imap <C-y>, <plug>(emmet-expand-abbr)
 
 " Ale
 """""""""""""""""""""""""""""""""""""""""""""""""
@@ -415,3 +424,10 @@ let g:ale_fixers = {
             \'ruby': ['rubocop'],
             \}
 let g:ale_fix_on_save = 1
+
+" Closetag
+"""""""""""""""""""""""""""""""""""""""""""""""""
+let g:closetag_filenames = '*.html,*.erb'
+let g:closetag_filetpyes = 'html,eruby'
+let g:closetag_shortcut = '>'
+

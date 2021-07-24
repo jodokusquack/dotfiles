@@ -51,3 +51,14 @@ alias tmuxk='tmux kill-session -t'
 alias tmuxa='tmux attach -t'
 alias tmuxl='tmux list-sessions'
 
+# +------+
+# | open |
+# +------+
+
+alias open="gio open"
+
+# +-----+
+# | vim |
+# +-----+
+
+alias vim="nvim"
